@@ -58,7 +58,7 @@ int binarysearch(pair<int,int> *v,int i,int j,int k){
 }
 
 //相互リンクの数え上げ
-long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *count,int n,vector<string> node){
+long int mutuallink(pair<int,int> *edge,long int *start,long int *end,int *indegree,long int *count,int n,vector<string> node){
 	//出力ファイル
 	ofstream ofs1("mutuallink.txt");
 	ofstream ofs2("mutualrate.txt");
@@ -70,6 +70,8 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 		int h=edge[i].first; //エッジのもと
 		int j=edge[i].second; //エッジの先
 		
+		indegree[j]++;
+
 		if(h<j){
 			//エッジの先の範囲：k〜l
 			long int k=start[j];
@@ -92,13 +94,14 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 	ofs1.close();
 
 	//ファイルに出力
+	ofs2<<"page/outdegree/mutuallinks/rate/indegree"<<endl;
 	for(int i=0;i<node_number;i++){
 		if(start[i]==0&&end[i]==0){
-			ofs2<<i<<" "<<node[i]<<" "<<"no edge"<<endl;
+			ofs2<<i<<"/"<<node[i]<<"/"<<"no edge"<<endl;
 		}
 		else{
 			int iedge=end[i]-start[i]+1;
-			ofs2<<i<<" "<<node[i]<<" "<<iedge<<" "<<count[i]<<" "<<(double)count[i]/iedge<<endl;
+			ofs2<<i<<"/"<<node[i]<<"/"<<iedge<<"/"<<count[i]<<"/"<<(double)count[i]/iedge<<"/"<<indegree[i]<<endl;
 		}
 	}
 	ofs2.close();
@@ -115,6 +118,7 @@ int main()
 	static long int start[node_number];
 	static long int end[node_number];
 
+	static int indegree[node_number];
 	//各ノードについて相互リンク数/全リンク数を記憶しておく配列
 	static long int mutualrate[node_number];
 
@@ -125,7 +129,7 @@ int main()
 	readpages(pages);
 	readlinks(links,start,end);
 
-	int j=mutuallink(links,start,end,mutualrate,node_number,pages);
+	int j=mutuallink(links,start,end,indegree,mutualrate,node_number,pages);
 
 	cout<<j<<endl;
 
