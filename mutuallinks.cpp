@@ -65,8 +65,6 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 
 	//相互リンクの合計カウント
 	long int totalcount=0;
-	//平均次数も調べる
-	int degree;
 
 	for(int i=0;i<start[n-1];i++){
 		int h=edge[i].first;
@@ -99,10 +97,8 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 		else{
 			int iedge=end[i]-start[i]+1;
 			ofs2<<i<<" "<<node[i]<<" "<<iedge<<" "<<count[i]<<" "<<(double)count[i]/iedge<<endl;
-			degree+=iedge;
 		}
 	}
-	ofs2<<"平均次数"<<" "<<(double)degree/node_number<<endl;
 	ofs2.close();
 	return totalcount;
 }
