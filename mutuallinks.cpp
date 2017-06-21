@@ -67,15 +67,16 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 	long int totalcount=0;
 
 	for(int i=0;i<start[n-1];i++){
-		int h=edge[i].first;
-		int j=edge[i].second;
-		//cout<<i<<" "<<h<<" "<<j<<endl;
+		int h=edge[i].first; //エッジのもと
+		int j=edge[i].second; //エッジの先
+		
 		if(h<j){
+			//エッジの先の範囲：k〜l
 			long int k=start[j];
 			long int l=end[j];
 			if(k==0&&l==0)count+=0;
 			else {
-				//jから出ているエッジについてhにむかうものがあるか
+				//注目しているエッジの反対向きがあるか探索
 				int m=binarysearch(edge,k,l,h);
 
 				//あったとき
@@ -83,6 +84,7 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 					ofs1<<h<<" "<<j<<" "<<node[h]<<" "<<node[j]<<endl;
 					count[h]++; count[j]++;
 				}
+
 				totalcount+=binarysearch(edge,k,l,h);
 			}
 		}
@@ -105,20 +107,20 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,long int *
 
 int main()
 {
-	vector<string> pages;
+	vector<string> pages; //pageを読み込むvector
 
+	static pair<int,int> links[edge_number]; //linkを読み込む配列
+
+	//linkの配列で各ノードについてstart,endを記録しておく配列
 	static long int start[node_number];
 	static long int end[node_number];
+
+	//各ノードについて相互リンク数/全リンク数を記憶しておく配列
 	static long int mutualrate[node_number];
 
-	//最初のノードのstartは0
-	start[0]=0;
-	//最後のノードのendはエッジ数−1
-	end[node_number-1]=edge_number-1;
+	start[0]=0; //最初のノードのstartは0
+	end[node_number-1]=edge_number-1; //最後のノードのendはエッジ数−1
 
-	
-
-	static pair<int,int> links[edge_number];
 
 	readpages(pages);
 	readlinks(links,start,end);
