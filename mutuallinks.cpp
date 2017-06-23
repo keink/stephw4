@@ -115,21 +115,8 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,int *indeg
 
 void terminal(pair<int ,int> *a,vector<string> node){
 	ofstream ofs3("terminal.txt");
-/*
-	string str1,str2;
-	int i,j,k,l,m,n;
-	double d;
-
-	//ifs>>str1;
-	while(ifs>>i>>str2>>j>>k>>d>>l>>m){
-		a[n].first=m;
-		a[n].second=i;
-		n++;
-	}*/
 
 	sort(a,a+node_number-1,std::greater<pair<int,int> >());
-
-	
 
 	for(int i=0;i<100;i++){
 		ofs3<<a[i].second<<"/"<<node[a[i].second]<<"/"<<a[i].first<<endl;
