@@ -58,7 +58,7 @@ int binarysearch(pair<int,int> *v,int i,int j,int k){
 }
 
 //相互リンクの数え上げ
-long int mutuallink(pair<int,int> *edge,long int *start,long int *end,int *indegree,long int *count,int n,vector<string> node){
+long int mutuallink(pair<int,int> *edge,long int *start,long int *end,int *indegree,long int *count,int n,vector<string> node,pair<int,int>*terminal){
 	//出力ファイル
 	ofstream ofs1("mutuallink.txt");
 	ofstream ofs2("mutualrate.txt");
@@ -94,18 +94,49 @@ long int mutuallink(pair<int,int> *edge,long int *start,long int *end,int *indeg
 	ofs1.close();
 
 	//ファイルに出力
-	ofs2<<"page/outdegree/mutuallinks/rate/indegree"<<endl;
+	ofs2<<"pagenumber/pagename/outdegree/mutuallinks/rate/indegree/outdegree+indegree-mutuallinks"<<endl;
 	for(int i=0;i<node_number;i++){
 		if(start[i]==0&&end[i]==0){
-			ofs2<<i<<"/"<<node[i]<<"/"<<"no edge"<<endl;
+			ofs2<<i<<"/"<<node[i]<<"/"<<"outdegree:no edge "<<"indegree:"<<indegree[i]<<endl;
+			terminal[i].second=i;
+			terminal[i].first=indegree[i];
 		}
 		else{
 			int iedge=end[i]-start[i]+1;
-			ofs2<<i<<"/"<<node[i]<<"/"<<iedge<<"/"<<count[i]<<"/"<<(double)count[i]/iedge<<"/"<<indegree[i]<<endl;
+			int totnod=iedge+indegree[i]-count[i];
+			ofs2<<i<<"/"<<node[i]<<"/"<<iedge<<"/"<<count[i]<<"/"<<(double)count[i]/iedge<<"/"<<indegree[i]<<"/"<<totnod<<endl;
+			terminal[i].second=i;
+			terminal[i].first=totnod;
 		}
 	}
 	ofs2.close();
 	return totalcount;
+}
+
+void terminal(pair<int ,int> *a,vector<string> node){
+	ofstream ofs3("terminal.txt");
+/*
+	string str1,str2;
+	int i,j,k,l,m,n;
+	double d;
+
+	//ifs>>str1;
+	while(ifs>>i>>str2>>j>>k>>d>>l>>m){
+		a[n].first=m;
+		a[n].second=i;
+		n++;
+	}*/
+
+	sort(a,a+node_number-1,std::greater<pair<int,int> >());
+
+	
+
+	for(int i=0;i<100;i++){
+		ofs3<<a[i].second<<"/"<<node[a[i].second]<<"/"<<a[i].first<<endl;
+	}
+
+	ofs3.close();
+
 }
 
 int main()
@@ -125,11 +156,14 @@ int main()
 	start[0]=0; //最初のノードのstartは0
 	end[node_number-1]=edge_number-1; //最後のノードのendはエッジ数−1
 
+	static pair<int,int>terminalnode[node_number];
 
 	readpages(pages);
 	readlinks(links,start,end);
 
-	int j=mutuallink(links,start,end,indegree,mutualrate,node_number,pages);
+	int j=mutuallink(links,start,end,indegree,mutualrate,node_number,pages,terminalnode);
+
+	terminal(terminalnode,pages);
 
 	cout<<j<<endl;
 
